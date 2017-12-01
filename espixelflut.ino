@@ -5,7 +5,9 @@
 #include <NeoPixelBrightnessBus.h>
 
 #define DEBUG
+//#define DEBUG_VERBOSE
 #define LED_DEBUG_IP
+
 #define UDP_PORT 1234
 #define PIN_ROTARY1 0
 #define PIN_ROTARY2 4
@@ -16,7 +18,7 @@
 #define TIMEOUT 10 * 60 * 1000 // 10 minutes
 
 // Debug logging
-#ifdef DEBUG
+#ifdef DEBUG_VERBOSE
 #define log( _str ) Serial.print( _str )
 #else
 #define log( _str ) void( _str )
@@ -25,7 +27,9 @@
 // Create udp interface
 WiFiUDP Udp;
 char g_incomingPacket[ 16 ];
-NeoPixelBrightnessBus<NeoGrbFeature, NeoEsp8266Dma800KbpsMethod> strip( 250 );      // use rx0/gpio3
+// 12V string uses RGB
+NeoPixelBrightnessBus<NeoRgbFeature, NeoEsp8266Dma800KbpsMethod> strip( 250 );      // use rx0/gpio3
+//5V separate neopixels: NeoPixelBrightnessBus<NeoGrbFeature, NeoEsp8266Dma800KbpsMethod> strip( 250 );      // use rx0/gpio3
 //NeoPixelBus<NeoGrbFeature, NeoEsp8266Uart800KbpsMethod> strip( 250 );     // tx1/gpio2
 //NeoPixelBus<NeoGrbFeature, NeoEsp8266AsyncUart800KbpsMethod> strip( 250 );// tx1/gpio2
 NeoGamma<NeoGammaTableMethod> colorGamma;
@@ -160,7 +164,7 @@ void loop()
   int packetSize = Udp.parsePacket();
   if (packetSize)
   {
-#ifdef DEBUG
+#ifdef DEBUG_VERBOSE
     Serial.printf("Received %d bytes from %s, port %d\n", packetSize, Udp.remoteIP().toString().c_str(), Udp.remotePort());
 #endif
 
@@ -171,7 +175,7 @@ void loop()
       // Stringify (null-terminate)
       g_incomingPacket[len] = 0;
 
-#ifdef DEBUG
+#ifdef DEBUG_VERBOSE
       Serial.printf("UDP packet contents: %s\n", g_incomingPacket);
 #endif
 
@@ -181,7 +185,7 @@ void loop()
       color = parseCommand( g_incomingPacket, len, num );
       if ( color != -1 )
       {
-#ifdef DEBUG
+#ifdef DEBUG_VERBOSE
           Serial.print( "\nLed:" );
           Serial.println( num, DEC );
           Serial.print( "Color:" );
@@ -221,8 +225,9 @@ bool initializeNetwork()
   }
 
   log( F( "Connected. IP: " ) );
-  log( WiFi.localIP() );
-  log( F( "\n" ) );
+#ifdef DEBUG
+  Serial.println( WiFi.localIP() );
+#endif
 
   // Start the UDP server
   Udp.begin( UDP_PORT );
@@ -250,7 +255,7 @@ bool initializeEEPROM()
   EEPROM.begin( E2END + 1 );
 #endif
   
-#ifdef DEBUG
+#ifdef DEBUG_VERBOSE
   // Show EEPROM memory, note that we can't use EEPROM.length() yet
   for (int i=0; i <= E2END; ++i )
   {
