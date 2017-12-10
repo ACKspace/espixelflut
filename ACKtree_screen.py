@@ -11,9 +11,9 @@ else:
     import pyscreenshot as ImageGrab
 
 
-ip = "192.168.2.86" # Change to correct IP address!
+ip = "192.168.1.120" # Change to correct IP address!
 port = 1234
-led_amount = 2
+led_amount = 200
 #numberOfLEDs=0
 class ChristmasTree( ):
     def __init__(self, ip, port, numberOfLEDs=0):

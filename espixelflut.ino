@@ -9,12 +9,12 @@
 #define LED_DEBUG_IP
 
 #define UDP_PORT 1234
-#define PIN_ROTARY1 0
+#define PIN_ROTARY1 5
 #define PIN_ROTARY2 4
-#define PIN_PUSHBUTTON 5
+#define PIN_PUSHBUTTON 0
 #define PIN_LEDS 0
-#define ESSID ""
-#define WPA_PASS ""
+#define ESSID "ACKspaceWifi"
+#define WPA_PASS "nope"
 #define TIMEOUT 10 * 60 * 1000 // 10 minutes
 
 // Debug logging
@@ -56,8 +56,8 @@ void setup()
   initializeLeds();
   initializeNetwork();
 
-  // Give pull up settings time to settle
-  //delay( 500 );
+  // Delay so the user can press the rotary encoder
+  delay( 2000 );
   
   int nPos;
   if ( !digitalRead( PIN_PUSHBUTTON ) )
@@ -103,7 +103,7 @@ void setup()
         //interrupts();
         g_bFalling_Edge = false;
       }
-      
+
       if ( g_time + 250 < millis() )
       {
         g_bBlink = !g_bBlink;
