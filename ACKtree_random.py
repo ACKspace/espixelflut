@@ -25,7 +25,7 @@ class ChristmasTree( ):
             self.sendSinglePixel(LEDx, color)
     
     def sendSinglePixel(self, LEDx, color):
-        self.sock.sendto(("PX " + str(LEDx) + " " + str(color) + '\n').encode('latin-1'), (self.ip, self.port))
+        self.sock.sendto(("PX " + str(LEDx) + " " + str(color)).encode('latin-1'), (self.ip, self.port))
 
     def sendFlood(self, color):
         for i in range(self.numberOfLEDs):
