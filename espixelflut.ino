@@ -26,7 +26,7 @@
 
 // Create udp interface
 WiFiUDP Udp;
-char g_incomingPacket[ 16 ];
+char g_incomingPacket[ 14 ];
 // 12V string uses RGB
 NeoPixelBrightnessBus<NeoRgbFeature, NeoEsp8266Dma800KbpsMethod> strip( 250 );      // use rx0/gpio3
 //5V separate neopixels: NeoPixelBrightnessBus<NeoGrbFeature, NeoEsp8266Dma800KbpsMethod> strip( 250 );      // use rx0/gpio3
@@ -169,7 +169,7 @@ void loop()
 #endif
 
     // Read packet (and leave space for a null character)
-    int len = Udp.read( g_incomingPacket, 15 );
+    int len = Udp.read( g_incomingPacket, 13 );
     if ( len > 0 )
     {
       // Stringify (null-terminate)
@@ -278,13 +278,6 @@ uint32_t parseCommand( char* _command, byte _length, byte& _led )
 {
   // PX <index> <RRGGBB>
   //echo -n "PX 123 FFFFFF" | nc -uw0 192.168.2.86 1234
-
-  // Filter out an optional enter on the index 13
-  if ( _length == 14 && _command[ 13 ] == 13 )
-    --_length;
-
-  // Terminate the string
-  _command[ _length ] = 0;
 
   // Verify proper length
   if ( _length < 11 || _length > 13 )
