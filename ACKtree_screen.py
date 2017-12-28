@@ -3,7 +3,7 @@
 # use `pip install` for  PIL and pyscreenshot
 import os
 from PIL import Image
-import socket
+import ChristmasTree
 
 if os.name == 'nt':
     import ImageGrab
@@ -16,36 +16,7 @@ port = 1234
 led_amount = 200
 ttr = 0.1
 
-class ChristmasTree():
-    def __init__(self, ip, port, numberOfLEDs=0):
-        self.ip = ip
-        self.port = port
-        self.numberOfLEDs = numberOfLEDs
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    
-    def sendColorArray(self, colorArray):
-        foo = ""
-        if len(colorArray) != self.numberOfLEDs:
-            print("warning: color array has a different size then numberOfLEDs!")
-        for LEDx, color in enumerate(colorArray):
-            foo += "PX " + str(LEDx).zfill(3) + " " + color
-        self.sock.sendto(foo[:int(len(foo)/2)].encode('latin-1'), (self.ip, self.port))
-        self.sock.sendto(foo[int(len(foo)/2):].encode('latin-1'), (self.ip, self.port))
-    
-    def sendSinglePixel(self, LEDx, color):
-        self.sock.sendto(("PX " + str(LEDx) + " " + str(color)).encode('latin-1'), (self.ip, self.port))
-    
-    def sendFlood(self, color):
-        foo = ""
-        bar = ""
-        for i in range(100):
-            foo += ("PX " + str(i*2).zfill(3) + " " + str(color))
-            bar += ("PX " + str(i*2 + 1).zfill(3) + " " + str(color))
-        self.sock.sendto(foo.encode('latin-1'), (self.ip, self.port))
-        time.sleep(0.1)
-        self.sock.sendto(bar.encode('latin-1'), (self.ip, self.port))
-        
-    
+
 def getAverageScreenColor():
     shot = ImageGrab.grab()
     shot_resized = shot.resize((200,1), Image.ANTIALIAS)
@@ -55,7 +26,7 @@ def getAverageScreenColor():
         colors.append(format(color[0], 'x').zfill(2) + format(color[1], 'x').zfill(2) + format(color[2], 'x').zfill(2))
     return colors
 
-ACKtree = ChristmasTree(ip, port, led_amount)
+ACKtree = ChristmasTree.ChristmasTree(ip, port, led_amount)
 
 previousAverageScreenColor = ""
 
