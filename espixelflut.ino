@@ -169,39 +169,44 @@ void loop()
 #endif
 
     // Read packet (and leave space for a null character)
-    int len = Udp.read( g_incomingPacket, 13 );
-    if ( len > 0 )
+    // ugly hack #sorryjoshua
+    if ( packetSize < 13 )
+      packetSize = 13;
+    for ( byte packets = 0; packets < packetSize / 13; ++packets )
     {
-      // Stringify (null-terminate)
-      g_incomingPacket[len] = 0;
-
-#ifdef DEBUG_VERBOSE
-      Serial.printf("UDP packet contents: %s\n", g_incomingPacket);
-#endif
-
-      byte num;
-      uint32_t color;
-      RgbColor rgbColor;
-      color = parseCommand( g_incomingPacket, len, num );
-      if ( color != -1 )
+      int len = Udp.read( g_incomingPacket, 13 );
+      if ( len > 0 )
       {
-#ifdef DEBUG_VERBOSE
-          Serial.print( "\nLed:" );
-          Serial.println( num, DEC );
-          Serial.print( "Color:" );
-          Serial.println( color, HEX );
-#endif
-        rgbColor = colorGamma.Correct( RgbColor((color >> 16) & 0xff, (color >> 8) & 0xff, color & 0xff ) );
-        strip.SetPixelColor( num, rgbColor );
-        strip.Show();
-        g_time = millis(); 
+        // Stringify (null-terminate)
+        g_incomingPacket[len] = 0;
+  
+  #ifdef DEBUG_VERBOSE
+        Serial.printf("UDP packet contents: %s\n", g_incomingPacket);
+  #endif
+  
+        byte num;
+        uint32_t color;
+        RgbColor rgbColor;
+        color = parseCommand( g_incomingPacket, len, num );
+        if ( color != -1 )
+        {
+  #ifdef DEBUG_VERBOSE
+            Serial.print( "\nLed:" );
+            Serial.println( num, DEC );
+            Serial.print( "Color:" );
+            Serial.println( color, HEX );
+  #endif
+          rgbColor = colorGamma.Correct( RgbColor((color >> 16) & 0xff, (color >> 8) & 0xff, color & 0xff ) );
+          strip.SetPixelColor( num, rgbColor );
+          g_time = millis(); 
+        }
+        else
+        {
+          log( "failed to parse packet" );
+        }
       }
-      else
-      {
-        log( "failed to parse packet" );
-      }
-    }
-  }  
+    } // for
+    strip.Show();  }  
 }
 
 ///////////////////////////////////////////////////////////////////////////////
