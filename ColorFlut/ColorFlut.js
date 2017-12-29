@@ -155,13 +155,15 @@ function addColor( _index )
     var length = colors.querySelectorAll( "div>input[type='color']" ).length;
     var div = colors.appendChild( document.createElement( "div" ) );
 
+    var previousColor = colors.querySelectorAll( "div>input[type='color']" )[ length - 1 ]
+    //console.log( previousColor );
     if (length < ledCount)
     {
         // add color input
         var color = div.appendChild( document.createElement( "input" ) );
         color.type = "color";
         color.id = "color" + ( length + 1 );
-        color.value = "#000000";
+        color.value = previousColor.value;
 
         color.addEventListener( "input", function( _event )
         {
@@ -174,7 +176,7 @@ function addColor( _index )
         var gradient = document.getElementById( "grad1" );
         var stop = gradient.appendChild( document.createElement( "stop" ) );
         stop.id = "color" + ( length + 1 ) + "_stop"
-        stop.style.stopColor = "#000000";
+        stop.style.stopColor = previousColor.value;
 
         // add 'remove' button
         var button = div.appendChild( document.createElement( "input" ) );
