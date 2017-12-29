@@ -6,6 +6,8 @@ var socketId = null;
 var hostname = "";
 var port = 0;
 
+var ledCount = 200;
+
 window.addEventListener( "load", function()
 {
     var address = document.getElementById( "address" );
@@ -60,8 +62,6 @@ function send( _data )
 
 function update( )
 {
-    var ledCount = 200;
-
     var inputs = document.querySelectorAll( "#colors>div>input[type='color']" );
     var start = 0;
     var startColor = parseColor( inputs[ 0 ].value );
@@ -155,33 +155,36 @@ function addColor( _index )
     var length = colors.querySelectorAll( "div>input[type='color']" ).length;
     var div = colors.appendChild( document.createElement( "div" ) );
 
-    // add color input
-    var color = div.appendChild( document.createElement( "input" ) );
-    color.type = "color";
-    color.id = "color" + ( length + 1 );
-    color.value = "#000000";
-
-    color.addEventListener( "input", function( _event )
+    if (length < ledCount)
     {
-        document.getElementById( color.id + "_stop" ).style.stopColor = _event.target.value;
-        if ( document.getElementById( "autoupdate" ).checked )
-            update();
-    } );
+        // add color input
+        var color = div.appendChild( document.createElement( "input" ) );
+        color.type = "color";
+        color.id = "color" + ( length + 1 );
+        color.value = "#000000";
 
-    // add color stop
-    var gradient = document.getElementById( "grad1" );
-    var stop = gradient.appendChild( document.createElement( "stop" ) );
-    stop.id = "color" + ( length + 1 ) + "_stop"
-    stop.style.stopColor = "#000000";
+        color.addEventListener( "input", function( _event )
+        {
+            document.getElementById( color.id + "_stop" ).style.stopColor = _event.target.value;
+            if ( document.getElementById( "autoupdate" ).checked )
+                update();
+        } );
 
-    // add 'remove' button
-    var button = div.appendChild( document.createElement( "input" ) );
-    button.type = "button";
-    button.value = "-";
-    button.onclick = removeColor;
+        // add color stop
+        var gradient = document.getElementById( "grad1" );
+        var stop = gradient.appendChild( document.createElement( "stop" ) );
+        stop.id = "color" + ( length + 1 ) + "_stop"
+        stop.style.stopColor = "#000000";
 
-    spreadStops();
-    document.getElementById( "gradient" ).innerHTML = document.getElementById( "gradient" ).innerHTML;
+        // add 'remove' button
+        var button = div.appendChild( document.createElement( "input" ) );
+        button.type = "button";
+        button.value = "-";
+        button.onclick = removeColor;
+
+        spreadStops();
+        document.getElementById( "gradient" ).innerHTML = document.getElementById( "gradient" ).innerHTML;
+    }
 }
 
 function spreadStops( )
@@ -199,4 +202,3 @@ function spreadStops( )
         stops[ n ].setAttribute( "offset", Math.round( n / ( stops.length - 1 ) * 100 ) + "%" );
     }
 }
-
