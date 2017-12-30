@@ -64,13 +64,14 @@ def morseSend(morseText):
                     morseDash()
             morseCharacterSpace()
 
+toSend = raw_input('Send what text? ')
+
 for i in range(ledAmount):
     morseSpaces.append('000000')
 for i in range(ledAmount):
     morseDots.append(dotColor)
 morseWordSpace()
 
-toSend = raw_input('Send what text? ')
 while 1:
     morseSend(toSend)
     morseWordSpace()
