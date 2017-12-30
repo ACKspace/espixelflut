@@ -6,8 +6,6 @@ import time
 ip = "192.168.1.234" # Change to correct IP address!
 port = 1234
 ledAmount = 200
-sleepTime = 0
-#numberOfLEDs=0
 
 ACKtree = ChristmasTree.ChristmasTree(ip, port, ledAmount)
 
