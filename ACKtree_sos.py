@@ -7,7 +7,7 @@ ip = "192.168.1.234" # Change to correct IP address!
 port = 1234
 ledAmount = 200
 dotTime = 0.2
-dotColor = 'ffffff'
+dotColor = '222222'
 
 ACKtree = ChristmasTree.ChristmasTree(ip, port, ledAmount)
 
@@ -40,7 +40,7 @@ for i in range(ledAmount):
     morseSpaces.append('000000')
 for i in range(ledAmount):
     morseDots.append(dotColor)
-morseWordSpace
+morseWordSpace()
 
 while 1:
     morseDot()
