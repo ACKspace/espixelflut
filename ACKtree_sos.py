@@ -7,7 +7,7 @@ ip = "192.168.1.234" # Change to correct IP address!
 port = 1234
 ledAmount = 200
 dotTime = 0.2
-dotColor = '222222'
+dotColor = 'ffffff'
 
 ACKtree = ChristmasTree.ChristmasTree(ip, port, ledAmount)
 
