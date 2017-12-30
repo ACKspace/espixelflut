@@ -5,6 +5,7 @@ var connected = false;
 var socketId = null;
 var hostname = "";
 var port = 0;
+var timer = null;
 
 var ledCount = 200;
 
@@ -36,6 +37,15 @@ window.addEventListener( "load", function()
 
     document.getElementById( "update" ).addEventListener( "click", function( _event )
     {
+        update();
+    } );
+
+    document.getElementById( "autoupdate" ).addEventListener( "click", function( _event )
+    {
+        if ( event.target.checked )
+            timer = setInterval( update, 250000 )
+        else
+            clearInterval( timer );
         update();
     } );
 
