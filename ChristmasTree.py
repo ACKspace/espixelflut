@@ -15,7 +15,7 @@ class ChristmasTree():
         if len(colorArray) != self.numberOfLEDs:
             print("warning: color array has a different size then numberOfLEDs!")
         for LEDx, color in enumerate(colorArray):
-            foo += "PX " + str(LEDx).zfill(3) + " " + color
+            foo += "PX " + "{0:0>3}".format(LEDx) + " " + color
         self.sock.sendto(foo[:int(len(foo)/2)].encode('latin-1'), (self.ip, self.port))
         self.sock.sendto(foo[int(len(foo)/2):].encode('latin-1'), (self.ip, self.port))
 
@@ -26,8 +26,8 @@ class ChristmasTree():
         foo = ""
         bar = ""
         for i in range(100):
-            foo += ("PX " + str(i*2).zfill(3) + " " + str(color))
-            bar += ("PX " + str(i*2 + 1).zfill(3) + " " + str(color))
+            foo += ("PX " + "{0:0>3}".format(i*2) + " " + str(color))
+            bar += ("PX " + "{0:0>3}".format(i*2 + 1) + " " + str(color))
         self.sock.sendto(foo.encode('latin-1'), (self.ip, self.port))
         sleep(0.1)
         self.sock.sendto(bar.encode('latin-1'), (self.ip, self.port))
