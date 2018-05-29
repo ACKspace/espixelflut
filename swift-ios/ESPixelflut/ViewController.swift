@@ -2,9 +2,6 @@
 //  ViewController.swift
 //  ESPixelflut
 //
-//  Created by Rob Bos on 29/05/2018.
-//  Copyright © 2018 ACKspace. All rights reserved.
-//
 
 import UIKit
 
