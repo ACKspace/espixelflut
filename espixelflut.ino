@@ -1,8 +1,11 @@
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 #include <EEPROM.h>
+// https://github.com/Makuna/NeoPixelBus
 //#include <NeoPixelBus.h>
 #include <NeoPixelBrightnessBus.h>
+// https://github.com/hideakitai/ArtNet
+#include <Artnet.h>
 
 #define DEBUG
 //#define DEBUG_VERBOSE
@@ -12,9 +15,11 @@
 #define PIN_ROTARY1 5
 #define PIN_ROTARY2 4
 #define PIN_PUSHBUTTON 0
-#define PIN_LEDS 0
+#define PIN_LEDS 3
 #define ESSID "ACKspaceWifi"
 #define WPA_PASS "nope"
+#define ESSID "matrix"
+#define WPA_PASS "Gast, wat doe je?"
 #define TIMEOUT 10 * 60 * 1000 // 10 minutes
 
 // Debug logging
@@ -38,6 +43,40 @@ volatile bool g_bFalling_Edge = false;
 uint8_t g_leds = 0;
 unsigned long g_time = 0;
 bool g_bBlink = false;
+
+ArtnetReceiver artnet;
+uint32_t startUniverse = 1;
+#define LEDS_PER_UNIVERSE 150 // 170 max floor(512/3)
+
+void callbackA(uint8_t* data, uint16_t size)
+{
+  if ( size > (3*LEDS_PER_UNIVERSE) )
+    size = (3*LEDS_PER_UNIVERSE);
+    
+  if ( size > (3 * g_leds) )
+    size = (3 * g_leds);
+
+  size_t i = 0;
+  for (size_t j = 0; j < size; j++)
+    strip.SetPixelColor( j, RgbColor( data[i++], data[i++], data[i++] ) );
+  strip.Show();
+  g_time = millis();
+}
+
+void callbackB(uint8_t* data, uint16_t size)
+{
+  if ( g_leds < LEDS_PER_UNIVERSE )
+    return;
+    
+  if ( size + (3 * LEDS_PER_UNIVERSE ) > ( 3 * g_leds ))
+    size = 3 * (g_leds - LEDS_PER_UNIVERSE);
+
+  size_t i = 0;
+  for (size_t j = 0; j < size; j++)
+    strip.SetPixelColor( j + ( 3 * LEDS_PER_UNIVERSE), RgbColor( data[i++], data[i++], data[i++] ) );
+  strip.Show();  
+  g_time = millis();
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // setup
@@ -161,6 +200,9 @@ void loop()
     g_time = millis();
   }
 
+  // check for artnet packet and handle callback
+  artnet.parse();
+
   int packetSize = Udp.parsePacket();
   if (packetSize)
   {
@@ -236,6 +278,11 @@ bool initializeNetwork()
 
   // Start the UDP server
   Udp.begin( UDP_PORT );
+
+  // Artnet initialization
+  artnet.begin();
+  artnet.subscribe( startUniverse, callbackA );  
+  artnet.subscribe( startUniverse + 1, callbackB );  
 
   return true;
 }
@@ -340,4 +387,3 @@ void blinkled( byte _nLed )
   
   strip.Show();  
 }
-
