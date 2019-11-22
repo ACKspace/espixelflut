@@ -1,5 +1,5 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
   "name": "ColorFlut",
   "description": "Pick a color",
   "version": "0.98",
