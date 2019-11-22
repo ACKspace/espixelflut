@@ -3,7 +3,7 @@ from lib.StupidArtnet import StupidArtnet
 
 import time
 
-ip = "192.168.6.85" # Change to correct IP address!
+ip = "192.168.1.234" # Change to correct IP address!
 universe = 1
 ledAmount = 50
 packet_size = ledAmount*3
