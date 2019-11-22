@@ -5,7 +5,7 @@ import sys
 from PyQt5.QtWidgets import (QApplication, QWidget, QLCDNumber, QSlider, QVBoxLayout)
 from PyQt5.QtCore import Qt
 
-ip = "192.168.6.85" # Change to correct IP address!
+ip = "192.168.1.234" # Change to correct IP address!
 universe = 1
 ledAmount = 100
 packet_size = ledAmount*3
