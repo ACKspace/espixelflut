@@ -18,9 +18,9 @@ var settings = defaults;
 window.addEventListener( "load", function()
 {
     var address = document.getElementById( "address" );
-    chrome.storage.local.get( [ 'hostname','port','universe','ledsPerUniverse','ledCount' ], function( _stored )
+    chrome.storage.local.get( Object.keys( defaults ), function( _stored )
     {
-        Object.assign( settings, defaults, _stored );
+        Object.assign( settings, _stored );
         address.value = settings.hostname;
         document.getElementById( "port" ).value = settings.port;
         document.getElementById( "universe" ).value = settings.universe;
