@@ -18,8 +18,6 @@
 #define PIN_LEDS 3
 #define ESSID "ACKspaceWifi"
 #define WPA_PASS "nope"
-#define ESSID "matrix"
-#define WPA_PASS "Gast, wat doe je?"
 #define TIMEOUT 10 * 60 * 1000 // 10 minutes
 
 // Debug logging
