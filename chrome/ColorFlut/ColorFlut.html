@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <title>ColorFlut - pick a color</title>
+        <script src="ColorFlut.js"></script>
+        <style>
+            @media (any-pointer: coarse)
+            {
+                body, input
+                {
+                    font-size: 1.5rem;
+                }
+                input[type=checkbox],input[type=color]
+                {
+                    transform: scale(1.5);
+                    margin: 0.3em 0.5em;
+                }
+            }            
+        </style>
+    </head>
+    <body style="overflow-y:auto; height:100%">
+        <div>
+            <label>Address<input type="text" id="address"/></label>
+            <label>Port<input type="number" id="port" min="0" max="32767"/></label>
+        </div>
+        <div>
+            <label>LEDs<input type="number" id="ledCount" min="1" max="340"/></label>
+        </div>
+        <div>
+            <input type="button" id="update" value="Send"/>
+            <label><input type="checkbox" id="autoupdate"/>Autoupdate</label>
+        </div>
+        <div>
+            <label><input type="checkbox" id="artnet" />Use Art-Net protocol</label>
+        </div>
+        <div id="artnetSettings" style="display:none">
+            <label>Start universe<input type="number" id="universe" min="0" max="32767"/></label><br>
+            <label>LEDs per universe<input type="number" id="ledsPerUniverse" min="100" max="170"/></label>
+        </div>
+        <div>
+            <input type="button" id="add" value="+"/>
+        </div>
+        <div id="colors">
+        </div>
+        <svg id="gradient" height="10" width="400">
+            <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                </linearGradient>
+            </defs>
+            <rect width="400" height="10" style="fill:url(#grad1)" />
+        </svg>
+
+    </body>
+</html>

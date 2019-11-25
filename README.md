@@ -15,13 +15,16 @@ The blue LED is to prevent voltage spikes that definitely destroys the ESP (buck
 ![fritzing schematic](espixelflut.png)
 
 ## chrome
-This subsirectory contains all files to run a chrome app that can set a custom gradient on the LED string.
+This subsirectory contains plugin directories to run a chrome app:
+* ColorFlut: can set a custom gradient on the LED string
+* FlutArt: can set an animating pattern on the LED string
+
 To install
 * go to te chrome (hamburger) menu, _More tools_, _Extensions_.
 * enable _Developer mode_
-* drag the `chrome` directory on top of the _Extensions_ tab
+* drag one of the subdirectories inside the `chrome` directory on top of the _Extensions_ tab
 * go to the apps tab or navigate to chrome://apps
-* run _ColorFlut_
+* run the app
 
 ## python
 This subsirectory contains several scripts to control the LED string:
