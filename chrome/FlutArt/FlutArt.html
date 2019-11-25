@@ -1,0 +1,162 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>FlutArt - Art-Net controller</title>
+        <script src="Pattern.js" type="application/javascript"></script>
+        <script src="HeissPattern.js" type="application/javascript"></script>
+        <script src="RainbowPattern.js" type="application/javascript"></script>
+        <script src="TwinklePattern.js" type="application/javascript"></script>
+        <script src="MatrixPattern.js" type="application/javascript"></script>
+        <script src="PatternGenerator.js" type="application/javascript"></script>
+        <script src="FancySlider.js" type="application/javascript"></script>
+        <script src="FlutArt.js" type="application/javascript"></script>
+        <style>
+@font-face {
+    font-family: 'JD LCD Rounded';
+    src: url('JD-LCD-Rounded.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html
+{
+    /* Prevent pinch zoom if we control multiple sliders at once */
+    touch-action: pan-x;
+}
+body
+{
+    font-family: sans-serif;
+    background: #3D3D3B;
+    user-select: none;
+    color: #9E9E9E;
+}
+
+.panel
+{
+    background: #1B1B1B;
+    user-select: none;
+    box-sizing: border-box;
+    border: 2px inset #eeeeee;
+    border-radius: 5mm;
+    padding: 2mm;
+    overflow: visible;
+}
+
+.panel>div
+{
+    white-space: nowrap;
+    overflow: visible;
+}
+
+.fancy
+{
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  box-sizing: border-box;
+  background-clip: padding-box;
+  vertical-align: top;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.fancy::-webkit-slider-thumb
+{
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
+.fancy
+{
+    border-radius: 2mm;
+    border: 1px solid #a5a8a8;
+    background: #d3d7d7;
+    height: 5mm;
+    width: 10cm;
+    box-sizing: border-box;
+}
+
+.fancy::-webkit-slider-thumb
+{
+    height: 14mm;
+    width: 8mm;
+    border: 1px solid rgba(0,0,0,0.36);
+    border-radius: 2mm;
+    background:url("gripper.svg") center center no-repeat #e5e9e8;
+    background-size: 7px 18px;
+    box-shadow: inset 0 1px white;
+}
+
+.fancy.vertical
+{
+    margin: 4.8cm -3.5cm;
+    transform:rotate(-90deg);
+}
+
+.fancyDisplay
+{
+    display: inline-block;
+    width: 2.8cm;
+    margin: 0 1mm;
+    box-sizing: border-box;
+    font-family: 'JD LCD Rounded';
+    font-size: 8mm;
+    border: 1mm inset rgb(125,140,115);
+    background-color: rgb(125,140,115);
+    color: rgb(20,20,20);
+    overflow: hidden;
+    border-radius: 1mm;
+}
+span.fancyDisplay
+{
+    text-align: center;
+}
+input.fancyDisplay
+{
+    width: 4cm;
+}
+
+
+.fancy:hover::-webkit-slider-thumb,
+.fancy:focus::-webkit-slider-thumb,
+.fancy:active::-webkit-slider-thumb
+{
+    border: 1px solid #0940fd;
+    box-shadow: 0 0 0 2px #6fb5f1;
+}
+
+.leds span
+{
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background: #646464;
+    background-image: radial-gradient(ellipse at top, #616161 0%, #616161 20%, #535353 60%);
+    border-radius: 50%;
+    box-shadow: 0 0 4px #1C1C17;
+    transition: all .1s ease;
+    margin: 2mm;
+}
+
+.leds span:hover
+{
+    background: #FF0000;
+    box-shadow: 0 0 4px #1C1C17;
+}
+        </style>
+    </head>
+    <body>
+
+<h1 class="title">
+  Art-Net controller
+</h1>
+
+<section class="panel">
+    <div class="leds"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="displays"></div>
+    <div class="controllers"></div>
+</section>
+    </body>
+</html>
+
