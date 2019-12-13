@@ -1,0 +1,26 @@
+{
+  "name": "FlutLogo UDP connector",
+  "version": "0.1",
+  "description": "",
+  "minimum_chrome_version": "33",
+  "app": {
+    "background": {
+      "scripts": ["main.js"]
+    }
+  },
+  "permissions": [
+    "storage"
+  ],
+  "sockets": {
+    "udp": {
+      "send": ["*"],
+      "bind": ["*"]
+    }
+  },
+  "icons":
+  {
+    "48": "Ackglider_favico.png"
+  },
+  "manifest_version": 2
+
+}

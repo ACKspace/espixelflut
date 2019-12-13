@@ -1,0 +1,30 @@
+{
+  "name": "FlutLogo app connector",
+  "version": "0.1",
+  "description": "",
+  "content_scripts": [
+    {
+      "matches": ["http://ackspace.nl/*", "https://ackspace.nl/*"],
+      "js": ["page.js"]
+    }
+  ],
+  "browser_action": {
+    "default_title": "FlutLogo app connector",
+    "default_icon": "Ackglider_favico.png"
+  },
+  "permissions": [
+    "activeTab"
+  ],
+  "background": {
+    "scripts": ["extension.js"],
+    "persistent": false
+  },
+  "externally_connectable": {
+    "ids": ["*"]
+  },
+  "icons":
+  {
+    "48": "Ackglider_favico.png"
+  },
+  "manifest_version": 2
+}

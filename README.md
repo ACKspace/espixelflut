@@ -15,9 +15,12 @@ The blue LED is to prevent voltage spikes that definitely destroys the ESP (buck
 ![fritzing schematic](espixelflut.png)
 
 ## chrome
-This subsirectory contains plugin directories to run a chrome app:
-* ColorFlut: can set a custom gradient on the LED string
-* FlutArt: can set an animating pattern on the LED string
+This subsirectory contains plugins (either packed or in a directory) to run a chrome app:
+* ColorFlut/: can set a custom gradient on the LED string
+* FlutArt/: can set an animating pattern on the LED string
+* FlutLogo UDP connector app/: listens to Art-Net packets (FlutArt for example) and passes them to the extension (with id `kanholleanfcldcpcdmgjndibhkofjck`)
+* FlutLogo app connector extension.crx: packaged app (with static id) that passes incoming messages to ACKspace's homepage
+* FlutLogo app connector extension/: source code (with semi-random id)
 
 To install
 * go to te chrome (hamburger) menu, _More tools_, _Extensions_.
