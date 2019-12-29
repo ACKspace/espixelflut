@@ -1,17 +1,26 @@
+#define ARTNET
+#define PIXELFLUT
+#define DEBUG
+//#define DEBUG_VERBOSE
+
 #include <ESP8266WiFi.h>
+#ifdef PIXELFLUT
 #include <WiFiUdp.h>
+#define UDP_PORT 1234
+#endif
+
 #include <EEPROM.h>
 // https://github.com/Makuna/NeoPixelBus
 //#include <NeoPixelBus.h>
 #include <NeoPixelBrightnessBus.h>
+
+#ifdef ARTNET
 // https://github.com/hideakitai/ArtNet
 #include <Artnet.h>
+#endif
 
-#define DEBUG
-//#define DEBUG_VERBOSE
 #define LED_DEBUG_IP
 
-#define UDP_PORT 1234
 #define PIN_ROTARY1 5
 #define PIN_ROTARY2 4
 #define PIN_PUSHBUTTON 0
@@ -28,8 +37,11 @@
 #endif
 
 // Create udp interface
+#ifdef PIXELFLUT
 WiFiUDP Udp;
 char g_incomingPacket[ 14 ];
+#endif
+
 // 12V string uses RGB
 NeoPixelBrightnessBus<NeoRgbFeature, NeoEsp8266Dma800KbpsMethod> strip( 250 );      // use rx0/gpio3
 //5V separate neopixels: NeoPixelBrightnessBus<NeoGrbFeature, NeoEsp8266Dma800KbpsMethod> strip( 250 );      // use rx0/gpio3
@@ -42,12 +54,17 @@ uint8_t g_leds = 0;
 unsigned long g_time = 0;
 bool g_bBlink = false;
 
+#ifdef ARTNET
 ArtnetReceiver artnet;
 uint32_t startUniverse = 1;
 #define LEDS_PER_UNIVERSE 150 // 170 max floor(512/3)
 
 void callbackA(uint8_t* data, uint16_t size)
 {
+#ifdef DEBUG_VERBOSE
+    Serial.printf("Art-Net packet u: %d, s: %d\n", startUniverse, size );
+#endif
+
   if ( size > (3*LEDS_PER_UNIVERSE) )
     size = (3*LEDS_PER_UNIVERSE);
     
@@ -56,13 +73,23 @@ void callbackA(uint8_t* data, uint16_t size)
 
   size_t i = 0;
   for (size_t j = 0; j < size; j++)
+  {
+#ifdef DEBUG_VERBOSE
+    Serial.printf("%d: %02X %02X %02X\n", j, data[i], data[i+1], data[i+2]);
+#endif
+
     strip.SetPixelColor( j, RgbColor( data[i++], data[i++], data[i++] ) );
+  }
   strip.Show();
   g_time = millis();
 }
 
 void callbackB(uint8_t* data, uint16_t size)
 {
+#ifdef DEBUG_VERBOSE
+    Serial.printf("Art-Net packet u: %d, s: %d\n", startUniverse, size );
+#endif
+
   if ( g_leds < LEDS_PER_UNIVERSE )
     return;
     
@@ -75,6 +102,7 @@ void callbackB(uint8_t* data, uint16_t size)
   strip.Show();  
   g_time = millis();
 }
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 // setup
@@ -172,14 +200,23 @@ void setup()
   {
     // Get last written value (wear leveling)
     nPos = getFirstAvailableEepromAddress();
-    if ( nPos >= 0 )
+    if ( nPos > 0 )
       g_leds = EEPROM.read( nPos - 1 );
     else
-      g_leds = 0;
+      g_leds = 200;
     log( F( "led count: " ) );
     log( String( g_leds, DEC ) );
     log( F( "\n" ) );
   }
+
+  #ifdef ARTNET
+  log( F( "Art-Net enabled\n" ));
+  #endif
+
+  #ifdef PIXELFLUT
+  log( F( "pixelflut enabled\n" ));
+  #endif
+
 }
 
 
@@ -198,9 +235,12 @@ void loop()
     g_time = millis();
   }
 
+#ifdef ARTNET
   // check for artnet packet and handle callback
   artnet.parse();
+#endif
 
+#ifdef PIXELFLUT
   int packetSize = Udp.parsePacket();
   if (packetSize)
   {
@@ -246,7 +286,10 @@ void loop()
         }
       }
     } // for
-    strip.Show();  }  
+
+    strip.Show();
+  }
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -274,13 +317,17 @@ bool initializeNetwork()
   Serial.println( WiFi.localIP() );
 #endif
 
+#ifdef PIXELFLUT
   // Start the UDP server
   Udp.begin( UDP_PORT );
+#endif
 
+#ifdef ARTNET
   // Artnet initialization
   artnet.begin();
   artnet.subscribe( startUniverse, callbackA );  
   artnet.subscribe( startUniverse + 1, callbackB );  
+#endif
 
   return true;
 }
