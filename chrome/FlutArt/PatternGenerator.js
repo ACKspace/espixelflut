@@ -5,7 +5,7 @@ class PatternGenerator
     [
         new HeissPattern(),
         //new MatrixPattern(),
-        //new RainbowPattern(),
+        new RainbowPattern(),
         //new TwinklePattern()
     ];
 
