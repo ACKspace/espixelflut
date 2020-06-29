@@ -34,9 +34,9 @@ window.addEventListener( "load", function()
         Object.assign( settings, _stored );
 
         // Host, universe (start), LEDcount, LEDs per universe
-        new FancySlider( "universe", (t,n) => { settings.universe = n; updateSettings( ); return n }, displayNode, controllerNode ).value = settings.universe;
-        new FancySlider( "LEDs", (t,n) => { settings.ledCount = n; updateSettings( ); return n }, displayNode, controllerNode ).value = settings.ledCount;
-        new FancySlider( "LEDs/universe", (t,n) => { settings.ledsPerUniverse = n; updateSettings( ); return n }, displayNode, controllerNode ).value = settings.ledsPerUniverse;
+        new FancySlider( "universe", (t,n) => { settings.universe = n; updateSettings( ); return n }, displayNode, controllerNode, true ).value = settings.universe;
+        new FancySlider( "LEDs", (t,n) => { settings.ledCount = n; updateSettings( ); return n }, displayNode, controllerNode, true ).value = settings.ledCount;
+        new FancySlider( "LEDs/universe", (t,n) => { settings.ledsPerUniverse = n; updateSettings( ); return n }, displayNode, controllerNode, true ).value = settings.ledsPerUniverse;
 
         let generator = new PatternGenerator( displayNode, controllerNode );
         //settings.patterns.forEach( _color => addColor( _color ) );
@@ -87,7 +87,6 @@ window.addEventListener( "load", function()
                         ledNodes[ n ].style.background = "rgb("+color[0]+","+color[1]+","+color[2]+")";
                     }
 
-                    console.log( color );
                     // TODO: dynamic packet count
                     if ( n > settings.ledsPerUniverse )
                         arrPacketEven.push( color[0], color[1], color[2] );

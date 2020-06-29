@@ -1,6 +1,8 @@
 class FancySlider
 {
-    constructor( _name, _callback, _displayNode, _controllerNode )
+    NLS_LOCKED = "LOCKED";
+
+    constructor( _name, _callback, _displayNode, _controllerNode, _disabled )
     {
         this._name = _name;
         if ( typeof _callback === "function" )
@@ -11,6 +13,7 @@ class FancySlider
         this.displayNode = document.createElement( "span" );
         this.displayNode.className = "fancyDisplay";
         this.displayNode.textContent = _name;
+        this.displayNode.addEventListener( "click", () => { this.disabled = !this.disabled } );
 
         this.controllerNode = document.createElement( "input" );
         this.controllerNode.type = "range";
@@ -19,12 +22,34 @@ class FancySlider
         this.controllerNode.value = 0;
         this.controllerNode.max = 255;
 
+
         this.controllerNode.addEventListener( "input", this.onInput.bind( this ) );
         this.controllerNode.addEventListener( "pointerdown", this.onActivate.bind( this ) );
         this.controllerNode.addEventListener( "pointerup", this.onDeactivate.bind( this ) );
 
         _displayNode.appendChild( this.displayNode );
         _controllerNode.appendChild( this.controllerNode );
+        this.disabled = _disabled;
+    }
+
+    get disabled()
+    {
+        return this._disabled;
+    }
+
+    set disabled( _disabled )
+    {
+        this._disabled = _disabled;
+        if ( _disabled )
+        {
+            this.controllerNode.setAttribute( "disabled", null );
+            this.displayNode.setAttribute( "aria-disabled", null );
+        }
+        else
+        {
+            this.controllerNode.removeAttribute( "disabled" );
+            this.displayNode.removeAttribute( "aria-disabled" );
+        }
     }
 
     get name()
@@ -52,7 +77,7 @@ class FancySlider
     onActivate( _event )
     {
         this.active = true;
-        this.displayNode.textContent = this.callback( "activate", this.controllerNode.value, this._name );
+        this.displayNode.textContent = this.callback( "activate", this._disabled ? this.NLS_LOCKED : this.controllerNode.value, this._name );
     }
 
     onDeactivate( _event )
